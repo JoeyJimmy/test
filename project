@@ -1,0 +1,57 @@
+/*
+ *作者：Joey Chen
+*/
+pragma solidity ^0.4.21; //宣告Solidity版本
+
+import "github.com/Arachnid/solidity-stringutils/strings.sol";
+
+contract project {
+    mapping (address => uint256) private balances;
+    uint NowNum_hash_tmp;
+    uint NowNum_tmp;
+    string tmp;
+    
+    function project(uint256 _initialSupply) public {
+        balances [msg.sender] = _initialSupply;
+        bytes32 hash = keccak256(now);
+        NowNum_hash_tmp = uint(hash)%(100);
+        NowNum_tmp = now % 100;
+    }
+    
+    function NowNum() public constant returns(uint){
+        return NowNum_tmp;
+    }
+    
+    function bigger(uint bet_token) public returns(string){
+        require(balances[msg.sender] >= bet_token);
+        if(NowNum_hash_tmp > NowNum_tmp) {
+            balances [msg.sender] += bet_token * 4;
+            tmp = "Congratulations on getting token *5 !" ;
+        }else{
+            balances [msg.sender] -= bet_token;
+            tmp = "Congratulations on losing token hahahahaha !";
+        } 
+        return tmp;
+    }
+    
+    function smaller(uint bet_token) public returns(string){
+        require(balances[msg.sender] >= bet_token);
+        if(NowNum_hash_tmp < NowNum_tmp) {
+            balances [msg.sender] += bet_token * 4;
+            tmp = "Congratulations on getting token *5 !" ;
+        }else{
+            balances [msg.sender] -= bet_token;
+            tmp = "Congratulations on losing token hahahahaha !";
+        } 
+        return tmp;
+    }
+    
+    function result() public constant returns (string){
+        return tmp;
+    }
+    
+    function token() public constant returns(uint){
+        return balances [msg.sender] ;
+    }
+    
+}
